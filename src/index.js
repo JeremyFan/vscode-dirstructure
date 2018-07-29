@@ -4,7 +4,7 @@ const { Tree } = require('./Tree');
 const { TreeNode } = require('./TreeNode');
 
 const lineReg = /\r\n|\r|\n/;
-const contentReg = /^(\s*)(\w.*)\#?(\.*)$/;
+const contentReg = /^(\s*)([\w\.\-\_]*)#?(.*)$/;
 
 function toTree(e, d, sel) {
   e.edit(edit => {
@@ -15,7 +15,8 @@ function toTree(e, d, sel) {
 
       let nodeList = new Tree,
         parents = [],
-        prevNode = null;
+        prevNode = null,
+        maxCharLen = 0;
 
       lines.forEach(line => {
         const matched = line.match(contentReg);
@@ -46,10 +47,12 @@ function toTree(e, d, sel) {
           nodeList.insert(node);
         }
 
+        maxCharLen = Math.max(maxCharLen, node.length());
+
         prevNode = node;
       });
 
-      render(nodeList, sel[x], edit);
+      render(nodeList, maxCharLen, sel[x], edit);
     }
   })
 }
@@ -61,7 +64,7 @@ function toMD(e, d, sel) {
 
       const lines = txt.split(lineReg)
         .filter(line => line !== '.')
-        .map(line => line.replace(/├─|│ |─ |└─|\s{2}/g, ' ').replace(/\s{2}/, ''));
+        .map(line => line.replace(/├─|│ |─ |└─|\s{2}/g, ' ').replace(/\s{2}/, '').replace(/\s+\.+\s+/, '#'));
 
       edit.replace(sel[x], lines.join('\n'));
     }
@@ -76,13 +79,18 @@ function getPrefix(node) {
   return getPrefix(node.parent) + (node.parent.isLastChild ? '    ' : '│   ');
 }
 
-function toLineStr(node) {
-  return getPrefix(node) + (node.isLastChild ? '└── ' : '├── ') + node.text;
+function toLineStr(node, maxCharLen) {
+  let text = node.text;
+  if (node.comment && node.comment !== '') {
+    const paddingLen = maxCharLen - node.length() + 4;
+    text = [node.text, '.'.repeat(paddingLen), node.comment].join(' ');
+  }
+  return getPrefix(node) + (node.isLastChild ? '└── ' : '├── ') + text;
 }
 
-function render(nodeList, sel, edit) {
+function render(nodeList, maxCharLen, sel, edit) {
   const list = [];
-  nodeList.traverse(node => list.push(toLineStr(node)));
+  nodeList.traverse(node => list.push(toLineStr(node, maxCharLen)));
 
   list.unshift('.');
   edit.replace(sel, list.join('\n'));
