@@ -64,7 +64,7 @@ function toMD(e, d, sel) {
 
       const lines = txt.split(lineReg)
         .filter(line => line !== '.')
-        .map(line => line.replace(/├─|│ |─ |└─|\s{2}/g, ' ').replace(/\s{2}/, '').replace(/\s+\.+\s+/, '#'));
+        .map(line => line.replace(/├─|│ |─ |└─|\s{2}/g, ' ').replace(/\s{2}/, '').replace(/\s+\·+\s+/, '#'));
 
       edit.replace(sel[x], lines.join('\n'));
     }
@@ -83,7 +83,7 @@ function toLineStr(node, maxCharLen) {
   let text = node.text;
   if (node.comment && node.comment !== '') {
     const paddingLen = maxCharLen - node.length() + 4;
-    text = [node.text, '.'.repeat(paddingLen), node.comment].join(' ');
+    text = [node.text, '·'.repeat(paddingLen), node.comment].join(' ');
   }
   return getPrefix(node) + (node.isLastChild ? '└── ' : '├── ') + text;
 }
