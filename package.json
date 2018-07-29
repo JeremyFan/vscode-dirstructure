@@ -3,7 +3,11 @@
     "displayName": "dirstructure",
     "description": "",
     "version": "0.1.0",
-    "publisher": "jeremyfan<jeremyfan_14@live.com>",
+    "publisher": "jeremyfan",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/JeremyFan/vscode-dirstructure.git"
+    },
     "engines": {
         "vscode": "^1.25.0"
     },
