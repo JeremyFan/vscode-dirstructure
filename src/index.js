@@ -3,21 +3,22 @@ const { Range } = vscode;
 const { Tree } = require('./Tree');
 const { TreeNode } = require('./TreeNode');
 
-const reg = /^(\s*)(\w.*)\#?(\.*)$/;
+const lineReg = /\r\n|\r|\n/;
+const contentReg = /^(\s*)(\w.*)\#?(\.*)$/;
 
 function toTree(e, d, sel) {
   e.edit(edit => {
     for (var x = 0; x < sel.length; x++) {
       const txt = d.getText(new Range(sel[x].start, sel[x].end));
 
-      const lines = txt.split(/\r\n/);
+      const lines = txt.split(lineReg);
 
       let nodeList = new Tree,
         parents = [],
         prevNode = null;
 
       lines.forEach(line => {
-        const matched = line.match(reg);
+        const matched = line.match(contentReg);
         if (!matched) return;
 
         const [, space, text, comment] = matched;
@@ -58,7 +59,7 @@ function toMD(e, d, sel) {
     for (var x = 0; x < sel.length; x++) {
       const txt = d.getText(new Range(sel[x].start, sel[x].end));
 
-      const lines = txt.split(/\r\n/)
+      const lines = txt.split(lineReg)
         .filter(line => line !== '.')
         .map(line => line.replace(/├─|│ |─ |└─|\s{2}/g, ' ').replace(/\s{2}/, ''));
 
