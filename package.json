@@ -1,0 +1,36 @@
+{
+    "name": "dirstructure",
+    "displayName": "dirstructure",
+    "description": "",
+    "version": "0.1.0",
+    "publisher": "jeremyfan<jeremyfan_14@live.com>",
+    "engines": {
+        "vscode": "^1.25.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:extension.dirStructure"
+    ],
+    "main": "./src",
+    "contributes": {
+        "keybindings": [
+            {
+                "command": "extension.dirStructure",
+                "key": "Alt+D"
+            }
+        ]
+    },
+    "scripts": {
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "typescript": "^2.6.1",
+        "vscode": "^1.1.6",
+        "eslint": "^4.11.0",
+        "@types/node": "^7.0.43",
+        "@types/mocha": "^2.2.42"
+    }
+}
