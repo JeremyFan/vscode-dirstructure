@@ -4,7 +4,7 @@ const { Tree } = require('./Tree');
 const { TreeNode } = require('./TreeNode');
 
 const lineReg = /\r\n|\r|\n/;
-const contentReg = /^(\s*)([\w\.\-\_]*)#?(.*)$/;
+const contentReg = /^(\s*)([\w\.\-\_\u4e00-\u9fa5]*)#?(.*)$/;
 
 function toTree(e, d, sel) {
   e.edit(edit => {
